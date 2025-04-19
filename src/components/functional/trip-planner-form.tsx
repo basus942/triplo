@@ -368,6 +368,25 @@ export default function TripPlannerForm() {
 }
 
 const destinations = [
+	{ value: "kerala", label: "Kerala, India" },
+	{ value: "kashmir", label: "Kashmir, India" },
+	{ value: "rajasthan", label: "Rajasthan, India" },
+	{ value: "goa", label: "Goa, India" },
+	{ value: "kolkata", label: "Kolkata, India" },
+	{ value: "andaman", label: "Andaman Islands, India" },
+	{ value: "guwahati", label: "Guwahati, Assam" },
+	{ value: "imphal", label: "Imphal, Manipur" },
+	{ value: "shillong", label: "Shillong, Meghalaya" },
+	{ value: "dimapur", label: "Dimapur, Nagaland" },
+	{ value: "aizawl", label: "Aizawl, Mizoram" },
+	{ value: "itagar", label: "Itanagar, Arunachal Pradesh" },
+	{ value: "agartala", label: "Agartala, Tripura" },
+	{ value: "delhi", label: "Delhi, India" },
+	{ value: "mumbai", label: "Mumbai, India" },
+	{ value: "jaipur", label: "Jaipur, India" },
+	{ value: "varanasi", label: "Varanasi, India" },
+	{ value: "bengaluru", label: "Bengaluru, India" },
+	{ value: "agra", label: "Agra, India" },
 	{ value: "paris", label: "Paris, France" },
 	{ value: "tokyo", label: "Tokyo, Japan" },
 	{ value: "bali", label: "Bali, Indonesia" },
@@ -376,6 +395,15 @@ const destinations = [
 	{ value: "sydney", label: "Sydney, Australia" },
 	{ value: "santorini", label: "Santorini, Greece" },
 	{ value: "cape-town", label: "Cape Town, South Africa" },
+	{ value: "dubai", label: "Dubai, UAE" },
+	{ value: "iceland", label: "Iceland" },
+	{ value: "machu-picchu", label: "Machu Picchu, Peru" },
+	{ value: "maui", label: "Maui, Hawaii, USA" },
+	{ value: "kyoto", label: "Kyoto, Japan" },
+	{ value: "amalfi-coast", label: "Amalfi Coast, Italy" },
+	{ value: "fjordland", label: "Fjordland, New Zealand" },
+	{ value: "zanzibar", label: "Zanzibar, Tanzania" },
+	{ value: "queenstown", label: "Queenstown, New Zealand" },
 ];
 
 const tripTypes = [

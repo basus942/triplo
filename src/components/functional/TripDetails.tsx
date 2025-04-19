@@ -31,7 +31,9 @@ export const TripDetails = () => {
 		queryFn: () => fetchTripData(),
 		refetchInterval: (queryData) => {
 			if (queryData.state.error) return false;
-			if (!queryData.state.data) return 1000;
+			if (!queryData.state.data) return 3000;
+
+			return false;
 		},
 	});
 	console.log({ status, data, error });

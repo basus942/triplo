@@ -31,6 +31,16 @@ export const buildPrompt = async ({
 	peopleCount,
 }: PromptInput): Promise<Record<string, string>> => {
 	const formatType = "json";
+	console.log({
+		tripType,
+		days,
+		place,
+		month,
+
+		descriptionLevel,
+		budget,
+		peopleCount,
+	});
 	const prompt = `
   You are a smart and creative AI travel planner. Generate a personalized, ${descriptionLevel} itinerary for a ${tripType} ${days}-day trip to ${place} in ${month}. 
   The trip is for a group of ${peopleCount} people, with a per-person budget of ₹${budget} (total budget ₹${
