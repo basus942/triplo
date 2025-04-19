@@ -10,7 +10,7 @@ import { jsonrepair } from "jsonrepair";
 export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs));
 }
-export const formatData = (data: any) => {
+export const formatData = (data: string) => {
 	console.log(data, typeof data);
 	const cleaned = data
 		.replace(/^```json/, "")
@@ -125,7 +125,7 @@ export const buildPrompt = async ({
 	const promptId = nanoid();
 
 	await dbConnect();
-	const result = await PromptModel.create({
+	await PromptModel.create({
 		promptId: promptId,
 		promptText: prompt,
 	});

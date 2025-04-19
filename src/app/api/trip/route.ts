@@ -35,7 +35,7 @@ export async function GET(
 		);
 	} catch (error) {
 		console.log(error);
-		const statusCode = (error as any)?.statusCode || 500;
+		const statusCode = 500;
 		return NextResponse.json(
 			{
 				success: false,

@@ -1,8 +1,8 @@
-import { ItineraryItem, TripData } from "@/types/generate";
+import { ItineraryItem } from "@/types/generate";
 import { useQuery } from "@tanstack/react-query";
-import { Loader, LoaderCircle } from "lucide-react";
+import { Loader } from "lucide-react";
 import { useSearchParams } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { toast } from "sonner";
 
 const isValid = (value: unknown) =>
@@ -26,7 +26,7 @@ export const TripDetails = () => {
 			throw new Error("promptId is required");
 		}
 	};
-	const { status, data, error, isLoading } = useQuery({
+	const { status, data, error } = useQuery({
 		queryKey: ["tripDetails", promptId],
 		queryFn: () => fetchTripData(),
 		refetchInterval: (queryData) => {

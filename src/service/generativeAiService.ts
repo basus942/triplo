@@ -14,7 +14,7 @@ export const generateTrip = async ({
 		content = formatData(data[0].content.parts[0].text!);
 	}
 	if (content) {
-		const result = await PromptModel.updateOne(
+		await PromptModel.updateOne(
 			{
 				promptId,
 			},

@@ -19,7 +19,7 @@ export async function POST(
 			}
 		);
 	} catch (error) {
-		const statusCode = (error as any)?.statusCode || 500;
+		const statusCode = 500;
 		return NextResponse.json(
 			{
 				success: false,

@@ -1,3 +1,4 @@
+/* eslint-enable no-global-assign */
 declare global {
 	var mongoose: {
 		conn: typeof import("mongoose") | null;
@@ -6,7 +7,7 @@ declare global {
 }
 
 export {};
-
+/* eslint-enable no-global-assign */
 import mongoose from "mongoose";
 
 const MONGODB_URI = process.env.NEXT_PUBLIC_MONGO_URI;
