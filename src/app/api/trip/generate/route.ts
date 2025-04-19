@@ -21,7 +21,7 @@ export async function POST(req: NextRequest) {
 			model: "gemini-2.0-flash",
 			contents: prompt,
 			config: {
-				maxOutputTokens: 800,
+				maxOutputTokens: 400,
 				temperature: 0.7, // Adjust for creativity (0.0 is deterministic, 1.0 is highly creative)
 				topP: 1, // Adjust for diversity
 			},
