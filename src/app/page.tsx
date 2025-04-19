@@ -10,8 +10,14 @@ import {
 	QueryClient,
 	QueryClientProvider,
 } from "@tanstack/react-query";
+import { Loader } from "lucide-react";
 
 export default function Home() {
+	const searchParams = useSearchParams();
+	const promptId = searchParams.get("promptId");
+	const queryClient = new QueryClient({});
+
+	// Set up hooks first to avoid conditional rendering affecting hook order
 	const [isClient, setIsClient] = useState(false);
 
 	useEffect(() => {
@@ -20,13 +26,10 @@ export default function Home() {
 
 	// Early return if not client-side
 	if (!isClient) {
-		return <div>Loading...</div>;
+		return (
+			<Loader className="animate-spin " color="white" />
+		);
 	}
-
-	const searchParams = useSearchParams();
-	const promptId = searchParams.get("promptId");
-
-	const queryClient = new QueryClient({});
 
 	return (
 		<QueryClientProvider client={queryClient}>
