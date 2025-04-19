@@ -1,169 +1,412 @@
-interface ItineraryItem {
-    day: number;
-    theme: string;
-    morning?: {
-      activity?: string;
-      timing?: string;
-      notes?: string;
-      budget?: string;
-      food?: {
-        breakfast?: string;
-      };
-    };
-    afternoon?: {
-      activity?: string;
-      timing?: string;
-      notes?: string;
-      budget?: string;
-      food?: {
-        lunch?: string;
-        dinner?: string;
-      };
-    };
-    evening?: {
-      activity?: string;
-      timing?: string;
-      notes?: string;
-      budget?: string;
-      food?: {
-        dinner?: string;
-      };
-      offbeat?: string;
-    };
-  }
-interface TripData {
-    tripName: string;
-    destination: string;
-    duration: string;
-    groupSize: string;
-    month: string;
-    theme: string;
-    overallTone: string;
-    perPersonBudget: number;
-    totalBudget: number;
-    itinerary: ItineraryItem[];
-    budgetBreakdown?: {
-      accommodation?: string;
-      food?: string;
-      travel?: string;
-      activities?: string;
-    };
-    costConsciousTips?: string[];
-    importantNotes?: string[];
-    summary?: string;
-  }
+import React from "react";
 
-// Function to check if a string is empty or undefined
-const isValid = (value: unknown) => value !== undefined && value !== null && value !== "";
-export const TripDetails: React.FC<{ data: TripData }> = ({ data })=> {
-    return (
-        <div className="trip-data bg-white rounded-lg shadow-lg p-6 max-w-4xl mx-auto">
-          {/* Header Section */}
-          <header className="mb-6">
-            <h1 className="text-3xl font-bold text-gray-800">{data.tripName}</h1>
-            <p className="text-gray-600">
-              {data.destination} | {data.duration} | Group Size: {data.groupSize}
-            </p>
-            <p className="text-gray-600">
-              Month: {data.month} | Theme: {data.theme} | Tone: {data.overallTone}
-            </p>
-            <p className="text-gray-600">
-              Per Person Budget: ₹{data.perPersonBudget} | Total Budget: ₹{data.totalBudget}
-            </p>
-          </header>
-    
-          {/* Itinerary Section */}
-          <div className="itinerary space-y-6">
-            {data.itinerary.map((item: ItineraryItem) => (
-              <div key={item.day} className="day border-l-4 border-cyan-500 pl-4">
-                <h2 className="text-xl font-semibold text-gray-800">Day {item.day}: {item.theme}</h2>
-                {/* Morning */}
-                <div className="mt-4">
-                  <h3 className="text-lg font-medium text-gray-700">Morning</h3>
-                  {isValid(item.morning?.activity) && <p>{item.morning?.activity}</p>}
-                  {isValid(item.morning?.timing) && <p><strong>Timing:</strong> {item.morning?.timing}</p>}
-                  {isValid(item.morning?.notes) && <p><strong>Notes:</strong> {item.morning?.notes}</p>}
-                  {isValid(item.morning?.budget) && <p><strong>Budget:</strong> {item.morning?.budget}</p>}
-                  {isValid(item.morning?.food?.breakfast) && (
-                    <p><strong>Breakfast:</strong> {item.morning?.food?.breakfast}</p>
-                  )}
-                </div>
-                {/* Afternoon */}
-                <div className="mt-4">
-                  <h3 className="text-lg font-medium text-gray-700">Afternoon</h3>
-                  {isValid(item.afternoon?.activity) && <p>{item.afternoon?.activity}</p>}
-                  {isValid(item.afternoon?.timing) && <p><strong>Timing:</strong> {item.afternoon?.timing}</p>}
-                  {isValid(item.afternoon?.notes) && <p><strong>Notes:</strong> {item.afternoon?.notes}</p>}
-                  {isValid(item.afternoon?.budget) && <p><strong>Budget:</strong> {item.afternoon?.budget}</p>}
-                  {isValid(item.afternoon?.food?.lunch) && (
-                    <p><strong>Lunch:</strong> {item.afternoon?.food?.lunch}</p>
-                  )}
-                  {isValid(item.afternoon?.food?.dinner) && (
-                    <p><strong>Dinner:</strong> {item.afternoon?.food?.dinner}</p>
-                  )}
-                </div>
-                {/* Evening */}
-                <div className="mt-4">
-                  <h3 className="text-lg font-medium text-gray-700">Evening</h3>
-                  {isValid(item.evening?.activity) && <p>{item.evening?.activity}</p>}
-                  {isValid(item.evening?.timing) && <p><strong>Timing:</strong> {item.evening?.timing}</p>}
-                  {isValid(item.evening?.notes) && <p><strong>Notes:</strong> {item.evening?.notes}</p>}
-                  {isValid(item.evening?.budget) && <p><strong>Budget:</strong> {item.evening?.budget}</p>}
-                  {isValid(item.evening?.food?.dinner) && (
-                    <p><strong>Dinner:</strong> {item.evening?.food?.dinner}</p>
-                  )}
-                  {isValid(item.evening?.offbeat) && (
-                    <p><strong>Offbeat Activity:</strong> {item.evening?.offbeat}</p>
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
-    
-          {/* Budget Breakdown Section */}
-          <footer className="mt-8">
-            <h2 className="text-2xl font-bold text-gray-800">Budget Breakdown</h2>
-            <div className="space-y-2 mt-4">
-              {isValid(data.budgetBreakdown?.accommodation) && (
-                <p><strong>Accommodation:</strong> {data.budgetBreakdown?.accommodation}</p>
-              )}
-              {isValid(data.budgetBreakdown?.food) && (
-                <p><strong>Food:</strong> {data.budgetBreakdown?.food}</p>
-              )}
-              {isValid(data.budgetBreakdown?.travel) && (
-                <p><strong>Travel:</strong> {data.budgetBreakdown?.travel}</p>
-              )}
-              {isValid(data.budgetBreakdown?.activities) && (
-                <p><strong>Activities:</strong> {data.budgetBreakdown?.activities}</p>
-              )}
-            </div>
-          </footer>
-    
-          {/* Cost-Conscious Tips Section */}
-          <section className="mt-8">
-            <h2 className="text-2xl font-bold text-gray-800">Cost-Conscious Tips</h2>
-            <ul className="list-disc list-inside mt-4">
-              {data.costConsciousTips?.map((tip: string, index: number) => (
-                <li key={index} className="text-gray-700">{tip}</li>
-              ))}
-            </ul>
-          </section>
-    
-          {/* Important Notes Section */}
-          <section className="mt-8">
-            <h2 className="text-2xl font-bold text-gray-800">Important Notes</h2>
-            <ul className="list-disc list-inside mt-4">
-              {data.importantNotes?.map((note: string, index: number) => (
-                <li key={index} className="text-gray-700">{note}</li>
-              ))}
-            </ul>
-          </section>
-    
-          {/* Summary Section */}
-          <section className="mt-8">
-            <h2 className="text-2xl font-bold text-gray-800">Summary</h2>
-            <p className="text-gray-700">{data.summary}</p>
-          </section>
-        </div>
-      );
+interface ItineraryItem {
+	day: number;
+	theme: string;
+	morning?: {
+		activity?: string;
+		time?: string;
+		description?: string;
+		tip?: string;
+		cost?: string;
+		food?: {
+			breakfast?: string;
+			lunch?: string;
+		};
+		photographySpot?: string;
+	};
+	afternoon?: {
+		activity?: string;
+		time?: string;
+		description?: string;
+		tip?: string;
+		cost?: string;
+		food?: {
+			lunch?: string;
+			dinner?: string;
+		};
+		photographySpot?: string;
+	};
+	evening?: {
+		activity?: string;
+		time?: string;
+		description?: string;
+		tip?: string;
+		cost?: string;
+		food?: {
+			dinner?: string;
+		};
+		photographySpot?: string;
+	};
 }
+
+interface TripData {
+	tripTitle: string;
+	travelers: number;
+	budgetPerPerson: number;
+	totalBudget: number;
+	duration: number;
+	currency: string;
+	theme: string;
+	itinerary: ItineraryItem[];
+	importantNotes: {
+		closures?: string;
+		bookingTips?: string;
+		dressCodes?: string;
+		localEtiquette?: string;
+		transportation?: string;
+		safety?: string;
+	};
+	budgetBreakdown: {
+		accommodation: string;
+		food: string;
+		travel: string;
+		activities: string;
+		miscellaneous: string;
+	};
+	costConsciousRecommendations: {
+		stay?: string;
+		food?: string;
+		travel?: string;
+		activities?: string;
+	};
+	summary: string;
+}
+
+const isValid = (value: unknown) =>
+	value !== undefined && value !== null && value !== "";
+
+export const TripDetails: React.FC<{ data: TripData }> = ({
+	data,
+}) => {
+	return (
+		<div className="trip-data bg-white rounded-lg shadow-lg p-6 max-w-4xl mx-auto">
+			{/* Header */}
+			<header className="mb-6">
+				<h1 className="text-3xl font-bold text-gray-800">
+					{data.tripTitle}
+				</h1>
+				<p className="text-gray-600">
+					Travelers: {data.travelers} | Duration:{" "}
+					{data.duration} days
+				</p>
+				<p className="text-gray-600">
+					Budget Per Person: {data.currency}{" "}
+					{data.budgetPerPerson} | Total Budget:{" "}
+					{data.currency} {data.totalBudget}
+				</p>
+				<p className="text-gray-600">Theme: {data.theme}</p>
+			</header>
+
+			{/* Itinerary */}
+			<div className="itinerary space-y-6">
+				{data.itinerary.map((item) => (
+					<div
+						key={item.day}
+						className="day border-l-4 border-cyan-500 pl-4"
+					>
+						<h2 className="text-xl font-semibold text-gray-800">
+							Day {item.day}: {item.theme}
+						</h2>
+
+						{/* Morning */}
+						{isValid(item.morning) && (
+							<div className="mt-4">
+								<h3 className="text-lg font-medium text-gray-700">
+									Morning
+								</h3>
+								{isValid(item.morning?.activity) && (
+									<p>{item.morning?.activity}</p>
+								)}
+								{isValid(item.morning?.time) && (
+									<p>
+										<strong>Time:</strong>{" "}
+										{item.morning?.time}
+									</p>
+								)}
+								{isValid(item.morning?.description) && (
+									<p>
+										<strong>Description:</strong>{" "}
+										{item.morning?.description}
+									</p>
+								)}
+								{isValid(item.morning?.tip) && (
+									<p>
+										<strong>Tip:</strong>{" "}
+										{item.morning?.tip}
+									</p>
+								)}
+								{isValid(item.morning?.cost) && (
+									<p>
+										<strong>Cost:</strong>{" "}
+										{item.morning?.cost}
+									</p>
+								)}
+								{isValid(item.morning?.food?.breakfast) && (
+									<p>
+										<strong>Breakfast:</strong>{" "}
+										{item.morning?.food?.breakfast}
+									</p>
+								)}
+								{isValid(item.morning?.food?.lunch) && (
+									<p>
+										<strong>Lunch:</strong>{" "}
+										{item.morning?.food?.lunch}
+									</p>
+								)}
+								{isValid(item.morning?.photographySpot) && (
+									<p>
+										<strong>Photography Spot:</strong>{" "}
+										{item.morning?.photographySpot}
+									</p>
+								)}
+							</div>
+						)}
+
+						{/* Afternoon */}
+						{isValid(item.afternoon) && (
+							<div className="mt-4">
+								<h3 className="text-lg font-medium text-gray-700">
+									Afternoon
+								</h3>
+								{isValid(item.afternoon?.activity) && (
+									<p>{item.afternoon?.activity}</p>
+								)}
+								{isValid(item.afternoon?.time) && (
+									<p>
+										<strong>Time:</strong>{" "}
+										{item.afternoon?.time}
+									</p>
+								)}
+								{isValid(item.afternoon?.description) && (
+									<p>
+										<strong>Description:</strong>{" "}
+										{item.afternoon?.description}
+									</p>
+								)}
+								{isValid(item.afternoon?.tip) && (
+									<p>
+										<strong>Tip:</strong>{" "}
+										{item.afternoon?.tip}
+									</p>
+								)}
+								{isValid(item.afternoon?.cost) && (
+									<p>
+										<strong>Cost:</strong>{" "}
+										{item.afternoon?.cost}
+									</p>
+								)}
+								{isValid(item.afternoon?.food?.lunch) && (
+									<p>
+										<strong>Lunch:</strong>{" "}
+										{item.afternoon?.food?.lunch}
+									</p>
+								)}
+								{isValid(item.afternoon?.food?.dinner) && (
+									<p>
+										<strong>Dinner:</strong>{" "}
+										{item.afternoon?.food?.dinner}
+									</p>
+								)}
+								{isValid(
+									item.afternoon?.photographySpot
+								) && (
+									<p>
+										<strong>Photography Spot:</strong>{" "}
+										{item.afternoon?.photographySpot}
+									</p>
+								)}
+							</div>
+						)}
+
+						{/* Evening */}
+						{isValid(item.evening) && (
+							<div className="mt-4">
+								<h3 className="text-lg font-medium text-gray-700">
+									Evening
+								</h3>
+								{isValid(item.evening?.activity) && (
+									<p>{item.evening?.activity}</p>
+								)}
+								{isValid(item.evening?.time) && (
+									<p>
+										<strong>Time:</strong>{" "}
+										{item.evening?.time}
+									</p>
+								)}
+								{isValid(item.evening?.description) && (
+									<p>
+										<strong>Description:</strong>{" "}
+										{item.evening?.description}
+									</p>
+								)}
+								{isValid(item.evening?.tip) && (
+									<p>
+										<strong>Tip:</strong>{" "}
+										{item.evening?.tip}
+									</p>
+								)}
+								{isValid(item.evening?.cost) && (
+									<p>
+										<strong>Cost:</strong>{" "}
+										{item.evening?.cost}
+									</p>
+								)}
+								{isValid(item.evening?.food?.dinner) && (
+									<p>
+										<strong>Dinner:</strong>{" "}
+										{item.evening?.food?.dinner}
+									</p>
+								)}
+								{isValid(item.evening?.photographySpot) && (
+									<p>
+										<strong>Photography Spot:</strong>{" "}
+										{item.evening?.photographySpot}
+									</p>
+								)}
+							</div>
+						)}
+					</div>
+				))}
+			</div>
+
+			{/* Important Notes */}
+			<section className="mt-8">
+				<h2 className="text-2xl font-bold text-gray-800">
+					Important Notes
+				</h2>
+				<ul className="list-disc list-inside mt-4">
+					{isValid(data.importantNotes?.closures) && (
+						<li>
+							<strong>Closures:</strong>{" "}
+							{data.importantNotes?.closures}
+						</li>
+					)}
+					{isValid(data.importantNotes?.bookingTips) && (
+						<li>
+							<strong>Booking Tips:</strong>{" "}
+							{data.importantNotes?.bookingTips}
+						</li>
+					)}
+					{isValid(data.importantNotes?.dressCodes) && (
+						<li>
+							<strong>Dress Codes:</strong>{" "}
+							{data.importantNotes?.dressCodes}
+						</li>
+					)}
+					{isValid(data.importantNotes?.localEtiquette) && (
+						<li>
+							<strong>Local Etiquette:</strong>{" "}
+							{data.importantNotes?.localEtiquette}
+						</li>
+					)}
+					{isValid(data.importantNotes?.transportation) && (
+						<li>
+							<strong>Transportation:</strong>{" "}
+							{data.importantNotes?.transportation}
+						</li>
+					)}
+					{isValid(data.importantNotes?.safety) && (
+						<li>
+							<strong>Safety:</strong>{" "}
+							{data.importantNotes?.safety}
+						</li>
+					)}
+				</ul>
+			</section>
+
+			{/* Budget Breakdown */}
+			<footer className="mt-8">
+				<h2 className="text-2xl font-bold text-gray-800">
+					Budget Breakdown
+				</h2>
+				<div className="space-y-2 mt-4">
+					{isValid(data.budgetBreakdown?.accommodation) && (
+						<p>
+							<strong>Accommodation:</strong>{" "}
+							{data.budgetBreakdown?.accommodation}
+						</p>
+					)}
+					{isValid(data.budgetBreakdown?.food) && (
+						<p>
+							<strong>Food:</strong>{" "}
+							{data.budgetBreakdown?.food}
+						</p>
+					)}
+					{isValid(data.budgetBreakdown?.travel) && (
+						<p>
+							<strong>Travel:</strong>{" "}
+							{data.budgetBreakdown?.travel}
+						</p>
+					)}
+					{isValid(data.budgetBreakdown?.activities) && (
+						<p>
+							<strong>Activities:</strong>{" "}
+							{data.budgetBreakdown?.activities}
+						</p>
+					)}
+					{isValid(data.budgetBreakdown?.miscellaneous) && (
+						<p>
+							<strong>Miscellaneous:</strong>{" "}
+							{data.budgetBreakdown?.miscellaneous}
+						</p>
+					)}
+				</div>
+			</footer>
+
+			{/* Cost-Conscious Recommendations */}
+			<section className="mt-8">
+				<h2 className="text-2xl font-bold text-gray-800">
+					Cost-Conscious Recommendations
+				</h2>
+				<ul className="list-disc list-inside mt-4">
+					{isValid(
+						data.costConsciousRecommendations?.stay
+					) && (
+						<li>
+							<strong>Stay:</strong>{" "}
+							{data.costConsciousRecommendations?.stay}
+						</li>
+					)}
+					{isValid(
+						data.costConsciousRecommendations?.food
+					) && (
+						<li>
+							<strong>Food:</strong>{" "}
+							{data.costConsciousRecommendations?.food}
+						</li>
+					)}
+					{isValid(
+						data.costConsciousRecommendations?.travel
+					) && (
+						<li>
+							<strong>Travel:</strong>{" "}
+							{data.costConsciousRecommendations?.travel}
+						</li>
+					)}
+					{isValid(
+						data.costConsciousRecommendations?.activities
+					) && (
+						<li>
+							<strong>Activities:</strong>{" "}
+							{
+								data.costConsciousRecommendations
+									?.activities
+							}
+						</li>
+					)}
+				</ul>
+			</section>
+
+			{/* Summary */}
+			{isValid(data.summary) && (
+				<section className="mt-8">
+					<h2 className="text-2xl font-bold text-gray-800">
+						Summary
+					</h2>
+					<p className="text-gray-700">{data.summary}</p>
+				</section>
+			)}
+		</div>
+	);
+};
