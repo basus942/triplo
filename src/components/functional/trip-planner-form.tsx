@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -9,6 +9,7 @@ import {
 	Clock3Icon,
 	UsersIcon,
 	CalendarDaysIcon,
+	Loader2,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -36,7 +37,6 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
-
 
 import { toast, Toaster } from "sonner";
 
@@ -113,14 +113,15 @@ const formSchema = z.object({
 		.positive(
 			"Number of travelers must be a positive number."
 		),
-	
 });
-type TripPlannerFormProps={
-	setData: React.Dispatch<React.SetStateAction<null>>
-}
+type TripPlannerFormProps = {
+	setData: React.Dispatch<React.SetStateAction<null>>;
+};
 
-export default function TripPlannerForm({setData}:TripPlannerFormProps) {
-
+export default function TripPlannerForm({
+	setData,
+}: TripPlannerFormProps) {
+	const [loading, setLoading] = React.useState(false);
 
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
@@ -128,15 +129,16 @@ export default function TripPlannerForm({setData}:TripPlannerFormProps) {
 			budget: 100000,
 			duration: 5,
 			peopleCount: 2,
-            destination:"paris",
-            month:"december",
-            tripType:"solo"
-
+			destination: "paris",
+			month: "december",
+			tripType: "solo",
 		},
 	});
 
 	// Update the onSubmit function to use the API
-	async function onSubmit(values: z.infer<typeof formSchema>) {
+	async function onSubmit(
+		values: z.infer<typeof formSchema>
+	) {
 		const place =
 			destinations.find(
 				(d) => d.value === values.destination
@@ -146,64 +148,38 @@ export default function TripPlannerForm({setData}:TripPlannerFormProps) {
 			values.month;
 
 		toast("Generating your itinerary...");
-	
-        try {
-            const response=await fetch("/api/trip/generate", {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                  tripType: values.tripType,
-                  place: place,
-                  month: monthName,
-                  days: values.duration,
-                  budget: values.budget,
-                  peopleCount: values.peopleCount,
-                }),
-              });
-              if (!response.ok) {
-                throw new Error("Failed to generate trip")
-              }const resData = await response.json()
-            
-              toast("Itinerary ready!");
-              setData(resData.data)
-        } catch (error) {
-			console.log(error)
-            toast("Failed to generate your itinerary. Please try again.")
-        }
-   
-		// fetch("/api/generate-itinerary", {
-		//   method: "POST",
-		//   headers: {
-		//     "Content-Type": "application/json",
-		//   },
-		//   body: JSON.stringify({
-		//     tripType: values.tripType,
-		//     place: place,
-		//     month: monthName,
-		//     descriptionLevel: values.descriptionLevel,
-		//     days: values.duration,
-		//     budget: values.budget,
-		//     peopleCount: values.peopleCount,
-		//   }),
-		// })
-		//   .then((response) => {
-		//     if (!response.ok) {
-		//       throw new Error("Failed to generate itinerary")
-		//     }
-		//     return response.json()
-		//   })
-		//   .then((data) => {
-		//     // Navigate to results page or display the itinerary
-		//     console.log("Generated Itinerary:", data.itinerary)
-		//     toast("Itinerary ready!");
-		//     // Here you would typically navigate to a results page or display the itinerary
-		//   })
-		//   .catch((error) => {
-		//     console.error("Error:", error)
-		//     toast("Failed to generate your itinerary. Please try again.")
-		//   })
+
+		try {
+			setLoading(true);
+			const response = await fetch("/api/trip/generate", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({
+					tripType: values.tripType,
+					place: place,
+					month: monthName,
+					days: values.duration,
+					budget: values.budget,
+					peopleCount: values.peopleCount,
+				}),
+			});
+			if (!response.ok) {
+				throw new Error("Failed to generate trip");
+			}
+			const resData = await response.json();
+
+			toast("Itinerary ready!");
+			setData(resData.data);
+			setLoading(false);
+		} catch (error) {
+			console.log(error);
+			toast(
+				"Failed to generate your itinerary. Please try again."
+			);
+			setLoading(false);
+		}
 	}
 
 	return (
@@ -409,9 +385,20 @@ export default function TripPlannerForm({setData}:TripPlannerFormProps) {
 								</FormItem>
 							)}
 						/>
-						
-						<Button type="submit" className="w-full">
-							Plan My Trip
+
+						<Button
+							type="submit"
+							className="w-full"
+							disabled={loading}
+						>
+							{loading ? (
+								<>
+									<Loader2 className="animate-spin" />{" "}
+									Planning your trip....
+								</>
+							) : (
+								"Plan My Trip"
+							)}
 						</Button>
 					</form>
 				</Form>

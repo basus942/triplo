@@ -72,7 +72,77 @@ const buildPrompt = ({
 
 	Use a **${tripType}-appropriate** tone (e.g., romantic, energetic, calming). Be clear, friendly, and useful.
 
-	👉 At the end, **always include a short summary paragraph** highlighting the top must-visit places by name (e.g., "Don’t miss the Matrimandir, Auroville Beach, and Villa Shanti!").`;
+	👉 At the end, **always include a short summary paragraph** highlighting the top must-visit places by name (e.g., "Don’t miss the Matrimandir, Auroville Beach, and Villa Shanti!").
+	The response must always be returned in valid and consistent JSON format, structured exactly as described below.
+	{
+  "tripTitle": "string",
+  "travelers": number,
+  "budgetPerPerson": number,
+  "totalBudget": number,
+  "duration": number,
+  "currency": "₹ (Indian Rupees)",
+  "theme": "string",
+  "itinerary": [
+    {
+      "day": number,
+      "theme": "string",
+      "morning": {
+        "activity": "string",
+        "time": "string",
+        "description": "string",
+        "tip": "string",
+        "cost": "string",
+        "food": {
+          "breakfast": "string",
+          "lunch": "string (if applicable)"
+        },
+        "photographySpot": "string"
+      },
+      "afternoon": {
+        "activity": "string",
+        "time": "string",
+        "description": "string",
+        "tip": "string",
+        "cost": "string",
+        "food": {
+          "dinner": "string (if applicable)"
+        },
+        "photographySpot": "string"
+      },
+      "evening": {
+        "activity": "string",
+        "time": "string",
+        "description": "string",
+        "tip": "string",
+        "cost": "string",
+        "photographySpot": "string"
+      }
+    }
+  ],
+  "importantNotes": {
+    "closures": "string",
+    "bookingTips": "string",
+    "dressCodes": "string",
+    "localEtiquette": "string",
+    "transportation": "string",
+    "safety": "string"
+  },
+  "budgetBreakdown": {
+    "accommodation": "string",
+    "food": "string",
+    "travel": "string",
+    "activities": "string",
+    "miscellaneous": "string"
+  },
+  "costConsciousRecommendations": {
+    "stay": "string",
+    "food": "string",
+    "travel": "string",
+    "activities": "string"
+  },
+  "summary": "string"
+}
+`;
 };
 
 const formatData = (data: string) => {
