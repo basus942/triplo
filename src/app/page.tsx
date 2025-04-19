@@ -1,5 +1,6 @@
 "use client";
 
+import Head from "next/head";
 import { useSearchParams } from "next/navigation";
 import { Suspense, useState, useEffect } from "react";
 import TripPlannerForm from "../components/functional/trip-planner-form";
@@ -29,6 +30,13 @@ export default function Home() {
 
 	return (
 		<QueryClientProvider client={queryClient}>
+			<Head>
+				<title>Triplo - Your Ultimate Trip Planner</title>
+				<meta
+					name="description"
+					content="Plan your perfect getaway with Triplo."
+				/>
+			</Head>
 			<main className="flex min-h-screen flex-col items-center justify-center p-4 md:p-24 bg-gradient-to-r from-sky-300 to-cyan-600">
 				<SpeedInsights />
 				<div className="mb-8 text-center">
