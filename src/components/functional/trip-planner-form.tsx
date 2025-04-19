@@ -41,43 +41,7 @@ import {
 import { toast, Toaster } from "sonner";
 
 import React from "react";
-
-const destinations = [
-	{ value: "paris", label: "Paris, France" },
-	{ value: "tokyo", label: "Tokyo, Japan" },
-	{ value: "bali", label: "Bali, Indonesia" },
-	{ value: "new-york", label: "New York, USA" },
-	{ value: "rome", label: "Rome, Italy" },
-	{ value: "sydney", label: "Sydney, Australia" },
-	{ value: "santorini", label: "Santorini, Greece" },
-	{ value: "cape-town", label: "Cape Town, South Africa" },
-];
-
-const tripTypes = [
-	{ value: "adventure", label: "Adventure" },
-	{ value: "relaxation", label: "Relaxation" },
-	{ value: "cultural", label: "Cultural" },
-	{ value: "family", label: "Family" },
-	{ value: "romantic", label: "Romantic" },
-	{ value: "solo", label: "Solo" },
-	{ value: "business", label: "Business" },
-];
-
-// Add months array
-const months = [
-	{ value: "january", label: "January" },
-	{ value: "february", label: "February" },
-	{ value: "march", label: "March" },
-	{ value: "april", label: "April" },
-	{ value: "may", label: "May" },
-	{ value: "june", label: "June" },
-	{ value: "july", label: "July" },
-	{ value: "august", label: "August" },
-	{ value: "september", label: "September" },
-	{ value: "october", label: "October" },
-	{ value: "november", label: "November" },
-	{ value: "december", label: "December" },
-];
+import { useRouter } from "next/navigation";
 
 // Update the form schema to include new fields
 const formSchema = z.object({
@@ -114,15 +78,10 @@ const formSchema = z.object({
 			"Number of travelers must be a positive number."
 		),
 });
-type TripPlannerFormProps = {
-	setData: React.Dispatch<React.SetStateAction<null>>;
-};
 
-export default function TripPlannerForm({
-	setData,
-}: TripPlannerFormProps) {
+export default function TripPlannerForm() {
 	const [loading, setLoading] = React.useState(false);
-
+	const router = useRouter();
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
@@ -165,13 +124,14 @@ export default function TripPlannerForm({
 					peopleCount: values.peopleCount,
 				}),
 			});
-			if (!response.ok) {
+
+			if (!response.ok || !response.body) {
 				throw new Error("Failed to generate trip");
 			}
-			const resData = await response.json();
+			const res = await response.json(); // Await the JSON response
+			const promptId = res.data.promptId;
 
-			toast("Itinerary ready!");
-			setData(resData.data);
+			router.push("/?promptId=" + promptId);
 			setLoading(false);
 		} catch (error) {
 			console.log(error);
@@ -406,3 +366,40 @@ export default function TripPlannerForm({
 		</Card>
 	);
 }
+
+const destinations = [
+	{ value: "paris", label: "Paris, France" },
+	{ value: "tokyo", label: "Tokyo, Japan" },
+	{ value: "bali", label: "Bali, Indonesia" },
+	{ value: "new-york", label: "New York, USA" },
+	{ value: "rome", label: "Rome, Italy" },
+	{ value: "sydney", label: "Sydney, Australia" },
+	{ value: "santorini", label: "Santorini, Greece" },
+	{ value: "cape-town", label: "Cape Town, South Africa" },
+];
+
+const tripTypes = [
+	{ value: "adventure", label: "Adventure" },
+	{ value: "relaxation", label: "Relaxation" },
+	{ value: "cultural", label: "Cultural" },
+	{ value: "family", label: "Family" },
+	{ value: "romantic", label: "Romantic" },
+	{ value: "solo", label: "Solo" },
+	{ value: "business", label: "Business" },
+];
+
+// Add months array
+const months = [
+	{ value: "january", label: "January" },
+	{ value: "february", label: "February" },
+	{ value: "march", label: "March" },
+	{ value: "april", label: "April" },
+	{ value: "may", label: "May" },
+	{ value: "june", label: "June" },
+	{ value: "july", label: "July" },
+	{ value: "august", label: "August" },
+	{ value: "september", label: "September" },
+	{ value: "october", label: "October" },
+	{ value: "november", label: "November" },
+	{ value: "december", label: "December" },
+];

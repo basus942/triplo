@@ -1,84 +1,51 @@
+import { ItineraryItem } from "@/types/generate";
+import { useQuery } from "@tanstack/react-query";
+import { Loader } from "lucide-react";
+import { useSearchParams } from "next/navigation";
 import React from "react";
-
-interface ItineraryItem {
-	day: number;
-	theme: string;
-	morning?: {
-		activity?: string;
-		time?: string;
-		description?: string;
-		tip?: string;
-		cost?: string;
-		food?: {
-			breakfast?: string;
-			lunch?: string;
-		};
-		photographySpot?: string;
-	};
-	afternoon?: {
-		activity?: string;
-		time?: string;
-		description?: string;
-		tip?: string;
-		cost?: string;
-		food?: {
-			lunch?: string;
-			dinner?: string;
-		};
-		photographySpot?: string;
-	};
-	evening?: {
-		activity?: string;
-		time?: string;
-		description?: string;
-		tip?: string;
-		cost?: string;
-		food?: {
-			dinner?: string;
-		};
-		photographySpot?: string;
-	};
-}
-
-interface TripData {
-	tripTitle: string;
-	travelers: number;
-	budgetPerPerson: number;
-	totalBudget: number;
-	duration: number;
-	currency: string;
-	theme: string;
-	itinerary: ItineraryItem[];
-	importantNotes: {
-		closures?: string;
-		bookingTips?: string;
-		dressCodes?: string;
-		localEtiquette?: string;
-		transportation?: string;
-		safety?: string;
-	};
-	budgetBreakdown: {
-		accommodation: string;
-		food: string;
-		travel: string;
-		activities: string;
-		miscellaneous: string;
-	};
-	costConsciousRecommendations: {
-		stay?: string;
-		food?: string;
-		travel?: string;
-		activities?: string;
-	};
-	summary: string;
-}
+import { toast } from "sonner";
 
 const isValid = (value: unknown) =>
 	value !== undefined && value !== null && value !== "";
 
-export const TripDetails: React.FC<{ data: TripData }> = ({
-	data,
-}) => {
+export const TripDetails = () => {
+	const searchParams = useSearchParams();
+	const promptId = searchParams.get("promptId");
+
+	const fetchTripData = async () => {
+		if (promptId) {
+			const response = await fetch(
+				`/api/trip?promptId=${promptId}`
+			);
+			if (!response.ok) {
+				throw new Error("Failed to fetch trip data");
+			}
+			const resJson = await response.json();
+			return resJson.data.response || null; // Return the value you want in `data`
+		} else {
+			throw new Error("promptId is required");
+		}
+	};
+	const { status, data, error } = useQuery({
+		queryKey: ["tripDetails", promptId],
+		queryFn: () => fetchTripData(),
+		refetchInterval: (queryData) => {
+			if (queryData.state.error) return false;
+			if (!queryData.state.data) return 1000;
+		},
+	});
+	console.log({ status, data, error });
+	if (error) {
+		toast("Something Went Wrong");
+	}
+	if (!data)
+		return (
+			<div className="text-center p-6 text-gray-500">
+				<div className="min-h-100">
+					<Loader className="animate-spin " color="white" />
+				</div>
+			</div>
+		);
 	return (
 		<div className="trip-data bg-white rounded-lg shadow-lg p-6 max-w-4xl mx-auto">
 			{/* Header */}
@@ -100,7 +67,7 @@ export const TripDetails: React.FC<{ data: TripData }> = ({
 
 			{/* Itinerary */}
 			<div className="itinerary space-y-6">
-				{data.itinerary.map((item) => (
+				{data.itinerary.map((item: ItineraryItem) => (
 					<div
 						key={item.day}
 						className="day border-l-4 border-cyan-500 pl-4"
