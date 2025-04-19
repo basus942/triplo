@@ -1,7 +1,8 @@
 "use client";
 import { useState } from "react";
-import TripPlannerForm from "./lib/trip-planner-form";
-import { TripDetails } from "./trip/page";
+import TripPlannerForm from "../components/functional/trip-planner-form";
+import { TripDetails } from "@/components/functional/TripDetails";
+
 
 export default function Home() {
   const [data, setData] = useState(null);
