@@ -9,7 +9,6 @@ import {
 	Clock3Icon,
 	UsersIcon,
 	CalendarDaysIcon,
-	MessageSquareIcon,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -40,7 +39,7 @@ import {
 
 
 import { toast, Toaster } from "sonner";
-import { useRouter } from "next/navigation";
+
 import React from "react";
 
 const destinations = [
@@ -122,7 +121,7 @@ type TripPlannerFormProps={
 
 export default function TripPlannerForm({setData}:TripPlannerFormProps) {
 
-    const router = useRouter()
+
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
@@ -170,6 +169,7 @@ export default function TripPlannerForm({setData}:TripPlannerFormProps) {
               toast("Itinerary ready!");
               setData(resData.data)
         } catch (error) {
+			console.log(error)
             toast("Failed to generate your itinerary. Please try again.")
         }
    

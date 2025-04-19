@@ -1,9 +1,61 @@
-
-
+interface ItineraryItem {
+    day: number;
+    theme: string;
+    morning?: {
+      activity?: string;
+      timing?: string;
+      notes?: string;
+      budget?: string;
+      food?: {
+        breakfast?: string;
+      };
+    };
+    afternoon?: {
+      activity?: string;
+      timing?: string;
+      notes?: string;
+      budget?: string;
+      food?: {
+        lunch?: string;
+        dinner?: string;
+      };
+    };
+    evening?: {
+      activity?: string;
+      timing?: string;
+      notes?: string;
+      budget?: string;
+      food?: {
+        dinner?: string;
+      };
+      offbeat?: string;
+    };
+  }
+interface TripData {
+    tripName: string;
+    destination: string;
+    duration: string;
+    groupSize: string;
+    month: string;
+    theme: string;
+    overallTone: string;
+    perPersonBudget: number;
+    totalBudget: number;
+    itinerary: ItineraryItem[];
+    budgetBreakdown?: {
+      accommodation?: string;
+      food?: string;
+      travel?: string;
+      activities?: string;
+    };
+    costConsciousTips?: string[];
+    importantNotes?: string[];
+    summary?: string;
+  }
 
 // Function to check if a string is empty or undefined
-const isValid = (value: any) => value !== undefined && value !== null && value !== "";
-export const TripDetails: React.FC<{ data: any }> = ({ data })=> {
+const isValid = (value: unknown) => value !== undefined && value !== null && value !== "";
+export const TripDetails: React.FC<{ data: TripData }> = ({ data })=> {
     return (
         <div className="trip-data bg-white rounded-lg shadow-lg p-6 max-w-4xl mx-auto">
           {/* Header Section */}
@@ -22,7 +74,7 @@ export const TripDetails: React.FC<{ data: any }> = ({ data })=> {
     
           {/* Itinerary Section */}
           <div className="itinerary space-y-6">
-            {data.itinerary.map((item: any) => (
+            {data.itinerary.map((item: ItineraryItem) => (
               <div key={item.day} className="day border-l-4 border-cyan-500 pl-4">
                 <h2 className="text-xl font-semibold text-gray-800">Day {item.day}: {item.theme}</h2>
                 {/* Morning */}
