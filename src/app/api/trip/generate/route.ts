@@ -1,10 +1,13 @@
-import { GoogleGenAI } from "@google/genai";
-import { jsonrepair } from "jsonrepair";
-import { NextRequest } from "next/server";
+import { GoogleGenerativeAI } from "@google/generative-ai";
+
+import { NextRequest, NextResponse } from "next/server";
 
 const apiKey = process.env.NEXT_PUBLIC_API_KEY;
 
-const ai = new GoogleGenAI({ apiKey: apiKey });
+const genAI = new GoogleGenerativeAI(apiKey!);
+const model = genAI.getGenerativeModel({
+	model: "gemini-1.5-flash",
+});
 type PromptInput = {
 	tripType: string;
 	days: number;
@@ -17,28 +20,29 @@ type PromptInput = {
 export async function POST(req: NextRequest) {
 	try {
 		const prompt = buildPrompt(await req.json());
-		const response = await ai.models.generateContent({
-			model: "gemini-2.0-flash",
-			contents: prompt,
-			config: {
-				maxOutputTokens: 100,
-				temperature: 0.7, // Adjust for creativity (0.0 is deterministic, 1.0 is highly creative)
-				topP: 1, // Adjust for diversity
+		const response = await model.generateContentStream([
+			prompt,
+		]);
+
+		// console.dir({ response }, { depth: null });
+		const encoder = new TextEncoder();
+
+		const stream = new ReadableStream({
+			async start(controller) {
+				for await (const chunk of response.stream) {
+					const text = chunk.text();
+					controller.enqueue(encoder.encode(text));
+				}
+				controller.close();
 			},
 		});
-		const data = response.text;
 
-		const parsed = data ? formatData(data) : null;
-
-		return new Response(
-			JSON.stringify({
-				data: parsed,
-			}),
-			{
-				headers: { "Content-Type": "application/json" },
-				status: 200,
-			}
-		);
+		return new NextResponse(stream, {
+			headers: {
+				"Content-Type": "text/plain; charset=utf-8",
+				"Cache-Control": "no-cache",
+			},
+		});
 	} catch (error) {
 		console.dir(error);
 		return new Response(JSON.stringify(error), {
@@ -143,14 +147,4 @@ const buildPrompt = ({
   "summary": "string"
 }
 `;
-};
-
-const formatData = (data: string) => {
-	const cleaned = data
-		.replace(/^```json/, "")
-		.replace(/```$/, "")
-		.trim();
-
-	const repaired = jsonrepair(cleaned);
-	return JSON.parse(repaired);
 };

@@ -41,6 +41,7 @@ import {
 import { toast, Toaster } from "sonner";
 
 import React from "react";
+import { jsonrepair } from "jsonrepair";
 
 const destinations = [
 	{ value: "paris", label: "Paris, France" },
@@ -165,13 +166,29 @@ export default function TripPlannerForm({
 					peopleCount: values.peopleCount,
 				}),
 			});
-			if (!response.ok) {
+
+			if (!response.ok || !response.body) {
 				throw new Error("Failed to generate trip");
 			}
-			const resData = await response.json();
+
+			const reader = response.body.getReader();
+			const decoder = new TextDecoder();
+			let result = "";
+
+			while (true) {
+				const { value, done } = await reader.read();
+				if (done) break;
+				const chunk = decoder.decode(value, {
+					stream: true,
+				});
+				result += chunk;
+
+				// Optional: update UI live here
+				// setData(prev => prev + chunk);
+			}
 
 			toast("Itinerary ready!");
-			setData(resData.data);
+			setData(formatData(result));
 			setLoading(false);
 		} catch (error) {
 			console.log(error);
@@ -406,3 +423,12 @@ export default function TripPlannerForm({
 		</Card>
 	);
 }
+const formatData = (data: string) => {
+	const cleaned = data
+		.replace(/^```json/, "")
+		.replace(/```$/, "")
+		.trim();
+
+	const repaired = jsonrepair(cleaned);
+	return JSON.parse(repaired);
+};
